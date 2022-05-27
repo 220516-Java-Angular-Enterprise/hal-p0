@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/hal-p0.iml" filepath="$PROJECT_DIR$/.idea/hal-p0.iml" />
-      <module fileurl="file://$PROJECT_DIR$/shopping-proj/your-artifactId.iml" filepath="$PROJECT_DIR$/shopping-proj/your-artifactId.iml" />
     </modules>
   </component>
 </project>

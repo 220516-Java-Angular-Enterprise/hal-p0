@@ -1,5 +1,7 @@
 package com.revature.halPizzeria.daos;
 
+import java.util.List;
+
 public interface CrudDAO<T> {
     void save(T obj);
 
@@ -8,6 +10,8 @@ public interface CrudDAO<T> {
     void delete(String id);
 
     T getById(String id);
+
+    List<String> getAllUsernames();
 
     List<T> getAll();
 }

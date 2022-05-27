@@ -1,17 +1,24 @@
 package com.revature.halPizzeria.services;
 
+import com.revature.halPizzeria.daos.UserDAO;
 import com.revature.halPizzeria.models.User;
+import com.revature.halPizzeria.util.annotations.Inject;
 import com.revature.halPizzeria.util.custom_exceptions.InvalidUserException;
 
-import java.util.StringTokenizer;
+import java.util.ArrayList;
+import java.util.List;
 
+/* Purpose: validation ie. checks username, password, and retrieve data from our daos. */
 public class UserService {
-//    @Inject
-//    private final UserDAO userDAO;
-//
-//    @Inject
-//    public UserService(UserDAO userDAO) {
-//        this.userDAO = userDAO;
+
+    @Inject
+    private final UserDAO userDAO;
+
+    @Inject
+    public UserService(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
     public User login(String username, String password) {
         /* List<User> users = new ArrayList<>() */
         /* users = userDAO.getAll() */
@@ -37,22 +44,36 @@ public class UserService {
         return isValidCredentials(user);
     }
 
-
-
-
-
-
-
-    public boolean isValidUsername(String username){
-        if(username.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$")) return true;
-
-        throw new InvalidUserException("Invalid Username:Must be 8-20 characters long");
-
+    public void register(User user) {
+        userDAO.save(user);
     }
 
-    public boolean isValidPassword(String password){
-        if (password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$")){return true;}
+    public User getUserById(String id) {
+        return userDAO.getById(id);
+    }
 
-        throw new InvalidUserException("Invalid Password! Minimum eight characters, at least one letter, one number and one special character:");
+    public boolean isValidUsername(String username) {
+        if (username.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$")) return true;
+        throw new InvalidUserException("Invalid username. Username must be 8-20 characters long.");
+    }
+
+    public boolean isNotDuplicateUsername(String username) {
+        List<String> usernames = userDAO.getAllUsernames();
+        if (usernames.contains(username)) throw new InvalidUserException("Choose a more unique username please!");
+        return true;
+    }
+
+    public boolean isValidPassword(String password) {
+        if (password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$")) return true;
+        throw new InvalidUserException("Invalid password. Minimum eight characters, at least one letter, one number and one special character.");
+    }
+
+    private User isValidCredentials(User user) {
+        if (user.getUsername() == null && user.getPassword() == null)
+            throw new InvalidUserException("Incorrect username and password.");
+        else if (user.getUsername() == null) throw new InvalidUserException("Incorrect username.");
+        else if (user.getPassword() == null) throw new InvalidUserException("Incorrect password.");
+
+        return user;
     }
 }
