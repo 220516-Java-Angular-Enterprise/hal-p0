@@ -1,6 +1,9 @@
 package com.revature.halPizzeria.ui;
 
+import com.revature.halPizzeria.daos.PizzeriaDAO;
+import com.revature.halPizzeria.daos.UserDAO;
 import com.revature.halPizzeria.models.User;
+import com.revature.halPizzeria.services.PizzeriaService;
 import com.revature.halPizzeria.services.UserService;
 import com.revature.halPizzeria.util.annotations.Inject;
 import com.revature.halPizzeria.util.custom_exceptions.InvalidUserException;
@@ -54,6 +57,7 @@ public class StartMenu implements IMenu {
     private void login(){
         String username;
         String password;
+        User user = new User();
         Scanner scan = new Scanner(System.in);
 
         while (true){
@@ -64,10 +68,18 @@ public class StartMenu implements IMenu {
             System.out.println("\nPassword: ");
             password = scan.nextLine();
 
+            try{
+                user =userService.login(username,password);
+                if (user.getRole().equals("ADMIN")){
+                    new AdminMenu(user, new PizzeriaService(new PizzeriaDAO())).start();
+                }else {
+                    new MainMenu(user, new UserService(new UserDAO())).start();
+                break;}
+            } catch (InvalidUserException e){
+                System.out.println(e.getMessage());
+            }
+
         }
-
-
-
 
     }
 
@@ -89,6 +101,7 @@ public class StartMenu implements IMenu {
                 try{
                     if (userService.isValidUsername(username)) {
                         System.out.println("Username Accepted!");
+                        // add if dupe///
                         break;
                     }
                 } catch (InvalidUserException e) {
@@ -103,7 +116,7 @@ public class StartMenu implements IMenu {
 
                         try{
                             if (userService.isValidPassword(password)) {
-                                System.out.print("Re-enter Password to verify: ");
+                                System.out.print("\nRe-enter Password to verify: ");
                                 String confirm = scan.nextLine();
 
                                 if (password.equals(confirm)) break;
@@ -143,10 +156,10 @@ public class StartMenu implements IMenu {
 
         }
 
-
-
-
         }
+
+
+
 
     }
 }

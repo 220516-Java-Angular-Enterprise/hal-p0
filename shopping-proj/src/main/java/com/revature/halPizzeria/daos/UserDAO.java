@@ -36,6 +36,13 @@ public class UserDAO implements CrudDAO<User>{
 
     @Override
     public void delete(String id) {
+        try{
+            PreparedStatement ps = con.prepareStatement("DELETE FROM users WHERE id= ?");
+            ps.setString(1,id);
+            ps.executeUpdate();
+        }catch (SQLException e){
+            throw new RuntimeException("An error occurred while get to the database");
+        }
 
     }
 
@@ -44,7 +51,7 @@ public class UserDAO implements CrudDAO<User>{
         return null;
     }
 
-    @Override
+
     public List<String> getAllUsernames() {
         List<String> usernames = new ArrayList<>();
         try{
