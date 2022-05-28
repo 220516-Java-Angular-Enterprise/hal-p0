@@ -1,7 +1,6 @@
 package com.revature.halPizzeria.services;
 
 import com.revature.halPizzeria.daos.PizzeriaDAO;
-import com.revature.halPizzeria.models.Pizza;
 import com.revature.halPizzeria.models.Pizzeria;
 import com.revature.halPizzeria.util.annotations.Inject;
 
@@ -12,13 +11,15 @@ public class PizzeriaService {
     private final PizzeriaDAO pizzeriaDAO;
     @Inject
     public PizzeriaService(PizzeriaDAO pizzeriaDAO) {
+
         this.pizzeriaDAO = pizzeriaDAO;
     }
 
 
 
 
-    public List<Pizzeria> getAllPizza(){
+    public List<Pizzeria> getAllPizzerias(){
+
         return pizzeriaDAO.getAll();
     }
 

@@ -132,17 +132,17 @@ public class StartMenu implements IMenu {
                     {
                         while(true){
                             System.out.println("\nPlease confirm your credentials are correct!");
-                            System.out.println("Username:" + username);
-                            System.out.println("Password" + password);
+                            System.out.println("Username: " + username);
+                            System.out.println("Password: " + password);
                             System.out.println("Enter: (y/n)");
                             String input = scan.nextLine();
 
                             switch (input){
                                 case "y":
                                     User user =new User(UUID.randomUUID().toString(),username,password, "DEFAULT");
-                                    System.out.println(user);
+                                    userService.register(user);
 
-                                    new MainMenu(user).start();
+                                    new MainMenu(user, new UserService(new UserDAO())).start(); ///add in other stuff
                                     break completeExit;
                                 case "n":
                                     break confirmExit;
