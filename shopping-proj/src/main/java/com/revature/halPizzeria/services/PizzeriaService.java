@@ -15,10 +15,8 @@ public class PizzeriaService {
         this.pizzeriaDAO = pizzeriaDAO;
     }
 
-
-
-
     public List<Pizzeria> getAllPizzerias(){
+
 
         return pizzeriaDAO.getAll();
     }
