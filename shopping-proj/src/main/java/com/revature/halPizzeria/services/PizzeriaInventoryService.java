@@ -1,5 +1,16 @@
 package com.revature.halPizzeria.services;
 
+import com.revature.halPizzeria.daos.PizzeriaInventoryDAO;
+import com.revature.halPizzeria.util.annotations.Inject;
+
 public class PizzeriaInventoryService {
-    /* Create DAO's first then come back*/
+    @Inject
+    private final PizzeriaInventoryDAO pizzeriaInventoryDAO;
+    @Inject
+    public PizzeriaInventoryService(PizzeriaInventoryDAO pizzeriaInventoryDAO) {
+        this.pizzeriaInventoryDAO = pizzeriaInventoryDAO;
+    }
+
+
+
 }
