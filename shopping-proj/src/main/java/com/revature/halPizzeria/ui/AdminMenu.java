@@ -1,5 +1,6 @@
 package com.revature.halPizzeria.ui;
 
+import com.revature.halPizzeria.models.PizzaOrders;
 import com.revature.halPizzeria.models.Pizzeria;
 import com.revature.halPizzeria.models.PizzeriaInventory;
 import com.revature.halPizzeria.models.User;
@@ -123,31 +124,65 @@ public class AdminMenu implements IMenu{
                         viewPizzeriaInventory(selectedPizzeria);
                         break;
                     case "2":
+                        viewOrdersByCust(selectedPizzeria);
                         break;
                     default:
                         System.out.println("\nInvalid selection!");
                         break;
 
                 }
-
-
-
             }
-
         }
 
         private void viewPizzeriaInventory(Pizzeria selectedPizzeria){
             Scanner scan = new Scanner(System.in);
 
-            System.out.println("Inventory for the" + selectedPizzeria.getCity()+ "Pizzeria");
+            System.out.println("Inventory for the" + selectedPizzeria.getCity()+ " Pizzeria");
             List <PizzeriaInventory> pizzeriaInventories = pizzeriaInventoryService.getInventoryByPizzeria(selectedPizzeria.getId());
+
             for (int i = 0; i < pizzeriaInventories.size(); i++){
-                System.out.println("["+(i+1)+"]"+ "PIZZA: "+ pizzeriaInventories.get(i).getPizzeria_id()+"\nAmount In Stock: "+pizzeriaInventories.get(i).getQuantity());
+                System.out.println("["+(i+1)+"]"+ "\nPizza: "+ pizzeriaInventories.get(i).getPizza_id()+"\nAmount In Stock: "+pizzeriaInventories.get(i).getQuantity());
             }
 
             System.out.println("\nSelect Pizza to edit Inventory");
             System.out.println("\n[x] To go back to go back to Pizzeria Menu");
 
+            System.out.print("\nEnter: ");
+            int input = scan.nextInt()-1;
+            scan.nextLine();
+            if (input >= 0 && input < pizzeriaInventories.size()) {
+                PizzeriaInventory selectedPizza = pizzeriaInventories.get(input);
+
+                System.out.print("\nNew Quantity for"+selectedPizza.getPizza_id()+": ");
+                int quantity = scan.nextInt();
+                scan.nextLine();
+                if (pizzeriaInventoryService.addInventory(quantity,selectedPizza.getPizza_id(),selectedPizza.getPizzeria_id())) {
+                    System.out.println("\nInventory was updated!");
+                }
+            } else pizzeriaMenu(selectedPizzeria);
+        }
+
+        private void viewOrdersByCust(Pizzeria selectedPizzeria){
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Inventory for the" + selectedPizzeria.getCity()+ " Pizzeria");
+
+            List <PizzaOrders> pizzaOrders = pizzaOrderService.getOrderbyPizzeria(selectedPizzeria.getId());
+            for (int i = 0; i < pizzaOrders.size(); i++){
+                System.out.println("["+(i+1)+"]"+ "\nCustomer ID"+ pizzaOrders.get(i).getUser_id()+
+                        "\nOrder Date: "+ pizzaOrders.get(i).getOrder_date()+
+                        "\nTotal: $"+pizzaOrders.get(i).getOrder_price() );
+            }
+
+            System.out.println("\n[x] Exit to Pizzeria Menu");
+            switch (scan.nextLine()){
+                case "x":
+                    pizzeriaMenu(selectedPizzeria);
+                    break;
+                default:
+                    break;
+            }
+
+
         }
 
 
@@ -155,3 +190,9 @@ public class AdminMenu implements IMenu{
 
 
         }
+
+
+
+
+
+

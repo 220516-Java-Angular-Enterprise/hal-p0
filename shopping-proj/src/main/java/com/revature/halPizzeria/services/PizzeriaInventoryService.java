@@ -33,4 +33,14 @@ public class PizzeriaInventoryService {
         return false;
     }
 
+    public boolean addInventory(int quantity, String pizza_id, String pizzeria_id){
+        try{
+            pizzeriaInventoryDAO.updateQuantity(quantity,pizza_id,pizzeria_id);
+            return true;
+        }catch (InvalidSQLException e){
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
 }

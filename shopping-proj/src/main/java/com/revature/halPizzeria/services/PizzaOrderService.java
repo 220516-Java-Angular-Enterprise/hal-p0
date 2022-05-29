@@ -33,5 +33,9 @@ public class PizzaOrderService {
         return pizzaOrderDAO.getPizzaOrdersByUser(obj);
     }
 
+    public List<PizzaOrders> getOrderbyPizzeria(String pizzeria_id){
+        return pizzaOrderDAO.getPizzaOrdersByPizzeria(pizzeria_id);
+    }
+
 
 }
