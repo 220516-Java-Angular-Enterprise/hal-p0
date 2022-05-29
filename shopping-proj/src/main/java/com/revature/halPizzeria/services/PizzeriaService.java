@@ -16,6 +16,7 @@ public class PizzeriaService {
         this.pizzeriaDAO = pizzeriaDAO;
     }
     public void register(Pizzeria pizzeria){
+
         pizzeriaDAO.save(pizzeria);
     }
 

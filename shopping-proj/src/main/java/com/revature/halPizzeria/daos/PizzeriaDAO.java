@@ -18,7 +18,7 @@ public class PizzeriaDAO implements CrudDAO<Pizzeria>{
     @Override
     public void save(Pizzeria obj) {
         try{
-            PreparedStatement ps = con.prepareStatement("INSERT INTO pizzerias (id, city, state) VALUES (?,?,?,?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO pizzerias (id, city, state) VALUES (?,?,?)");
             ps.setString(1,obj.getId());
             ps.setString(2,obj.getCity());
             ps.setString(3,obj.getState());

@@ -1,8 +1,12 @@
 package com.revature.halPizzeria.ui;
 
+import com.revature.halPizzeria.daos.PizzaOrderDAO;
 import com.revature.halPizzeria.daos.PizzeriaDAO;
+import com.revature.halPizzeria.daos.PizzeriaInventoryDAO;
 import com.revature.halPizzeria.daos.UserDAO;
 import com.revature.halPizzeria.models.User;
+import com.revature.halPizzeria.services.PizzaOrderService;
+import com.revature.halPizzeria.services.PizzeriaInventoryService;
 import com.revature.halPizzeria.services.PizzeriaService;
 import com.revature.halPizzeria.services.UserService;
 import com.revature.halPizzeria.util.annotations.Inject;
@@ -71,7 +75,9 @@ public class StartMenu implements IMenu {
             try{
                 user =userService.login(username,password);
                 if (user.getRole().equals("ADMIN")){
-                    new AdminMenu(user, new PizzeriaService(new PizzeriaDAO())).start();
+                    new AdminMenu(user, new PizzeriaService(new PizzeriaDAO()),
+                            new PizzeriaInventoryService(new PizzeriaInventoryDAO()),
+                            new PizzaOrderService(new PizzaOrderDAO())).start();
                 }else {
                     new MainMenu(user, new UserService(new UserDAO())).start();
                 break;}
