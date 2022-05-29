@@ -1,30 +1,81 @@
 package com.revature.halPizzeria.daos;
 
+import com.revature.halPizzeria.models.OrderedPizzas;
+import com.revature.halPizzeria.models.PizzaOrders;
+import com.revature.halPizzeria.util.database.DatabaseConnection;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class PizzaOrderDAO implements CrudDAO{
+public class PizzaOrderDAO implements CrudDAO<PizzaOrders>{
+    Connection con = DatabaseConnection.getCon();
+
     @Override
-    public void save(Object obj) {
+    public void save(PizzaOrders obj) {
+        try {
+            PreparedStatement ps = con.prepareStatement("INSERT INTO pizza_orders (id, user_id, pizzeria_id, order_date, price) VALUES(?,?,?,?,?)");
+            ps.setString(1,obj.getId());
+            ps.setString(2,obj.getUser_id());
+            ps.setString(3,obj.getPizzeria_id());
+            ps.setString(4,obj.getOrder_date());
+            ps.setInt(5,obj.getOrder_price());
+            ps.executeUpdate();
+
+        }catch (SQLException e){
+            throw new RuntimeException("Error! Trouble saving to database!");
+        }
 
     }
 
     @Override
-    public void update(Object obj) {
+    public void update(PizzaOrders obj) {
 
     }
 
     @Override
     public void delete(String id) {
+        try{
+            PreparedStatement ps = con.prepareStatement("DELETE FROM pizza_orders WHERE id= ?");
+            ps.setString(1,id);
+            ps.executeUpdate();
 
+        }catch (SQLException e){
+            throw new RuntimeException("Error! Trouble trying to delete from database!");
+        }
     }
 
     @Override
-    public Object getById(String id) {
+    public PizzaOrders getById(String id) {
         return null;
     }
 
     @Override
-    public List getAll() {
-        return null;
+    public List<PizzaOrders> getAll() {
+        return  null;
     }
+
+    public List<PizzaOrders> getPizzaOrdersByUser(PizzaOrders obj){
+        List<PizzaOrders> pizzaOrders = new ArrayList<>();
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM pizza_orders WHERE user_id = (?)");
+            ps.setString(2,obj.getUser_id());
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()){
+                pizzaOrders.add(new PizzaOrders(rs.getString("id"),rs.getString("user_id"),
+                        rs.getString("pizzeria_id"), rs.getString("order_date"),
+                        rs.getInt("price")));
+            }
+
+        }catch (SQLException e){
+            throw new RuntimeException("Error! Trouble trying to retrieve Pizzerias!");}
+
+
+        return pizzaOrders;
+    }
+
 }

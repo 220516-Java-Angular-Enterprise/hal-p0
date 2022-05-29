@@ -24,7 +24,7 @@ public class UserDAO implements CrudDAO<User>{
             ps.executeUpdate();
 
         }catch (SQLException e){
-            throw new RuntimeException("An error occurred while saving to the database");
+            throw new RuntimeException("Error! Trouble saving to database!");
         }
 
     }
@@ -41,7 +41,7 @@ public class UserDAO implements CrudDAO<User>{
             ps.setString(1,id);
             ps.executeUpdate();
         }catch (SQLException e){
-            throw new RuntimeException("An error occurred while get to the database");
+            throw new RuntimeException("Error! Trouble trying to delete from database!");
         }
 
     }
@@ -62,7 +62,7 @@ public class UserDAO implements CrudDAO<User>{
                 usernames.add(rs.getString("username"));
             }
         }catch (SQLException e){
-            throw new RuntimeException("An error occurred while get to the database");
+            throw new RuntimeException("Error! Trouble trying to retrieve Usernames!");
         }
         return usernames;
     }
@@ -85,7 +85,7 @@ public class UserDAO implements CrudDAO<User>{
             }
 
             } catch (SQLException e){
-            throw new RuntimeException("An error occurred while get to the database");}
+            throw new RuntimeException("Error! Trouble trying to retrieve Users!");}
 
         return users;
     }

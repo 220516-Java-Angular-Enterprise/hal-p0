@@ -27,7 +27,7 @@ public class PizzaDAO implements CrudDAO<Pizza> {
             ps.executeUpdate();
 
         }catch (SQLException e){
-            throw new RuntimeException("An error occurred when trying to save to the database!");
+            throw new RuntimeException("Error! Trouble saving to database!");
         }
 
     }
@@ -44,7 +44,7 @@ public class PizzaDAO implements CrudDAO<Pizza> {
             ps.setString(1,id);
             ps.executeUpdate();
         }catch (SQLException e){
-            throw new InvalidSQLException("Error occurred while trying to update the database");
+            throw new InvalidSQLException("Error! Trouble trying to delete from database!");
         }
 
     }
@@ -68,7 +68,7 @@ public class PizzaDAO implements CrudDAO<Pizza> {
 
             }
         }catch (SQLException e){
-            throw new RuntimeException("An error occurred retrieving the pizzas!");
+            throw new RuntimeException("Error! Trouble trying to retrieve Pizzas!");
         }
 
 
@@ -89,8 +89,8 @@ public class PizzaDAO implements CrudDAO<Pizza> {
 
             }
         }catch (SQLException e){
-            throw new RuntimeException("An error occurred retrieving the pizzas!");
+            throw new RuntimeException("Error! Trouble trying to retrieve Pizzas!");
         }
-        return null;
+        return pizzas;
     }
 }
