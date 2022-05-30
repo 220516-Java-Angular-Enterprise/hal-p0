@@ -17,7 +17,7 @@ public class PizzaOrderDAO implements CrudDAO<PizzaOrders>{
     @Override
     public void save(PizzaOrders obj) {
         try {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO pizza_orders (id, user_id, pizzeria_id, order_date, price) VALUES(?,?,?,?,?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO pizza_orders (order_id, user_id, pizzeria_id, order_date, price) VALUES(?,?,?,?,?)");
             ps.setString(1,obj.getId());
             ps.setString(2,obj.getUser_id());
             ps.setString(3,obj.getPizzeria_id());
@@ -26,7 +26,7 @@ public class PizzaOrderDAO implements CrudDAO<PizzaOrders>{
             ps.executeUpdate();
 
         }catch (SQLException e){
-            throw new RuntimeException("Error! Trouble saving to database!");
+            System.out.println(e.getMessage());;
         }
 
     }
@@ -66,7 +66,7 @@ public class PizzaOrderDAO implements CrudDAO<PizzaOrders>{
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
-                pizzaOrders.add(new PizzaOrders(rs.getString("id"),rs.getString("user_id"),
+                pizzaOrders.add(new PizzaOrders(rs.getString("order_id"),rs.getString("user_id"),
                         rs.getString("pizzeria_id"), rs.getString("order_date"),
                         rs.getInt("price")));
             }
@@ -85,7 +85,7 @@ public class PizzaOrderDAO implements CrudDAO<PizzaOrders>{
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
-                pizzaOrders.add(new PizzaOrders(rs.getString("id"),rs.getString("user_id"),
+                pizzaOrders.add(new PizzaOrders(rs.getString("order_id"),rs.getString("user_id"),
                         rs.getString("pizzeria_id"), rs.getString("order_date"),
                         rs.getInt("price")));
             }

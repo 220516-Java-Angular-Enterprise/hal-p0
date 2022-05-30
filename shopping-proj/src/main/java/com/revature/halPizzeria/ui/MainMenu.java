@@ -101,22 +101,22 @@ public class MainMenu implements IMenu {
         if (input >= 0 && input < pizzerias.size()) {
             Pizzeria selectedPizzeria = pizzerias.get(input);
             System.out.print("\n"+ selectedPizzeria.getCity()+", "+ selectedPizzeria.getState());
-            viewPizzas(selectedPizzeria);
+            String randomOrderID = UUID.randomUUID().toString();
+            viewPizzas(selectedPizzeria,randomOrderID);
         } else System.out.println("\nInvalid restaurant selection!");
 
     }
 
-    private void viewPizzas(Pizzeria selectedPizzeria){
+    private void viewPizzas(Pizzeria selectedPizzeria, String randomOrderID) {
         Scanner scan = new Scanner(System.in);
-        String pizzeria_id = selectedPizzeria.getId();
-
-        System.out.println("\nAvailable pizzas at the "+ selectedPizzeria.getCity()+ " Pizzeria");
+        System.out.println("\nAvailable pizzas at the " + selectedPizzeria.getCity() + " Pizzeria");
         List<Pizza> pizzas = pizzaService.getPizzasByPizzeria(selectedPizzeria.getId());
-        //System.out.println(pizzas);
 
-        for (int i=0; i< pizzas.size();i++){
-            System.out.println("\n["+(i+1)+"] "+ pizzas.get(i).getPizza_name() +" | "+ pizzas.get(i).getPizza_desc()+" | $"+ pizzas.get(i).getPrice());
-        }
+        for (int i = 0; i < pizzas.size(); i++) {
+            System.out.println("\n[" + (i + 1) + "] " + pizzas.get(i).getPizza_name() + " | " +
+                            pizzas.get(i).getPizza_desc() + " | $" + pizzas.get(i).getPrice());
+            }
+
 
         System.out.println("\nSelect a pizza to add to your cart");
         System.out.println("\n[x] To go back");
@@ -126,14 +126,15 @@ public class MainMenu implements IMenu {
         scan.nextLine();
         if (input>= 0 && input<pizzas.size()){
             Pizza selectedPizza = pizzas.get(input);
-            makeCart(selectedPizza, selectedPizzeria, input);
+            makeCart(selectedPizza, selectedPizzeria, input, randomOrderID);
         }
 
+
     }
-        //*************     FIX THIS TO SO IT SAVES TO DATABASE      **************//
-    private void makeCart(Pizza selectedPizza, Pizzeria selectedPizzeria, int input){
+
+    private void makeCart(Pizza selectedPizza, Pizzeria selectedPizzeria, int input, String randomOrderID) {
         Scanner scan = new Scanner(System.in);
-        String randomOrderID = UUID.randomUUID().toString();
+
         String pizzaID = selectedPizza.getId();
         int quantity;
 
@@ -144,23 +145,21 @@ public class MainMenu implements IMenu {
                 quantity = scan.nextInt();
                 scan.nextLine();
                 List <PizzeriaInventory> pizzeriaInventories = pizzeriaInventoryService.getInventoryByPizzeria(selectedPizzeria.getId());
-
                 int ogInput = pizzeriaInventories.get(input).getQuantity();
                 int newInventQuantity = ogInput - quantity;
                 OrderedPizzas orderedPizzas = new OrderedPizzas(randomOrderID,pizzaID,quantity);
-                //pizzeriaInventoryService.subInventory(selectedPizza.getId(), selectedPizzeria.getId(), newInventQuantity);
                 orderedPizzasService.saveOrder(orderedPizzas);
+                pizzeriaInventoryService.subInventory(selectedPizza.getId(), selectedPizzeria.getId(), newInventQuantity);
                 System.out.println("\n[1] View Cart and Checkout");
                 System.out.println("\n[2] Add more Pizzas!");
                 System.out.print("\nEnter: ");
                 switch (scan.nextLine()){
                     case "1":
-                        viewCart(orderedPizzas);
-
-                        checkout(selectedPizzeria, orderedPizzas, selectedPizza);
+                        viewCart(orderedPizzas, selectedPizza, selectedPizzeria);
+                        //checkout(selectedPizzeria, orderedPizzas, selectedPizza);
                         break exit;
                     case "2":
-                        viewPizzas(selectedPizzeria);
+                        viewPizzas(selectedPizzeria, randomOrderID);
                         break;
                     default:
                         System.out.println("\n Invalid input");
@@ -169,32 +168,72 @@ public class MainMenu implements IMenu {
 
             }
         }
+
+
     }
+
+
     //*************     FIX THIS TO SO IT SAVES TO DATABASE      **************//
 
-    private void viewCart(OrderedPizzas orderedPizzas){
-        System.out.println(orderedPizzas.getPizza_quantity());
-        System.out.println(orderedPizzas.getPizza_id());
+    private void viewCart(OrderedPizzas orderedPizzas, Pizza selectedPizza, Pizzeria selectedPizzeria){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\n"+user.getUsername() + " Cart:");
+        List<OrderedPizzas> orderPizza = orderedPizzasService.getByOrderId(orderedPizzas.getOrder_id());
+
+        for (int i = 0; i < orderPizza.size(); i++){
+            System.out.println("["+(i+1)+"]"+ "\nPizza: "+ selectedPizza.getPizza_name()+
+                    "\nQuantity: "+orderPizza.get(i).getPizza_quantity());
+        }
+        System.out.println("\nWould you like to checkout?");
+        System.out.print("\nEnter: (y/n) ");
+        switch (scan.nextLine()){
+            case "y":
+                checkout(orderedPizzas, selectedPizzeria,selectedPizza);
+                break;
+            case "n":
+                viewPizzas(selectedPizzeria, orderedPizzas.getOrder_id());
+            default:
+                System.out.println("\nInvalid Input!");
+        }
     }
 
-    private void checkout(Pizzeria selectedPizzeria, OrderedPizzas orderedPizzas, Pizza selectedPizza){
-//        Scanner scan = new Scanner(System.in);
-//        PizzaOrders pizzaOrders = new PizzaOrders();
-//        pizzaOrders.setId(UUID.randomUUID().toString());
-//        pizzaOrders.setPizzeria_id(selectedPizzeria.getId());
-//        pizzaOrders.setUser_id(user.getId());
-//        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//        Date date = new Date();
-//        System.out.println(formatter.format(date));
-//        pizzaOrders.setOrder_date(String.valueOf(date));
-//        pizzaOrders.setOrder_price(12);
-//
-//        System.out.println(pizzaOrders);
-//
-//        // do math to get order total price (get pizza_id prize)*(get quantity by pizza id) + yeah
-//        //
+    private void checkout(OrderedPizzas orderedPizzas, Pizzeria selectedPizzeria, Pizza selectedPizza){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\nConfirm Order:");
+        //get date//
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        String order_date = formatter.format(date);
+        //get total//
+        int orderPrice = orderedPizzas.getPizza_quantity() * selectedPizza.getPrice() ;
+        //initialize mb//
+        PizzaOrders pizzaOrders= new PizzaOrders();
+        pizzaOrders.setUser_id(user.getId());
+        pizzaOrders.setId(orderedPizzas.getOrder_id());
+        pizzaOrders.setPizzeria_id(selectedPizzeria.getId());
+        pizzaOrders.setOrder_price(orderPrice);
+        pizzaOrders.setOrder_date(order_date);
+        pizzaOrderService.saveOrder(pizzaOrders);
+        // get order_id from cart, get pizzeria_id, get user id , get
+        System.out.println("\nOrder Date: " + pizzaOrders.getOrder_date()+ " | Pizzeria: " + selectedPizzeria.getCity());
+        System.out.println("\nOrdered Pizzas: "+ selectedPizza.getPizza_name() +" | Quantity: "+ orderedPizzas.getPizza_quantity());
+        System.out.println("\nOrder Total: $" +pizzaOrders.getOrder_price());
+
+        System.out.println("\nMain menu? (y/n)");
+        System.out.println("\nEnter");
+        switch (scan.nextLine()){
+            case "y":
+                System.out.println("\nHave a Nice Day!!");
+                start();
+            case "n":
+                break;
+            default:
+                System.out.println("\nInvalid input");
+                break;
+        }
 
     }
+
 
 
 

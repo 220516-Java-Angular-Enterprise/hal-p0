@@ -34,6 +34,9 @@ public class OrderedPizzasService {
         return false;
     }
 
+    public List<OrderedPizzas> getByOrderId(String id){
+        return orderedPizzasDAO.getCartByUser(id);
+    }
 
 
 
