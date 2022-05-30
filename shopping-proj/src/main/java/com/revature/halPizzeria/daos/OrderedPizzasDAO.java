@@ -66,10 +66,24 @@ public class OrderedPizzasDAO implements CrudDAO<OrderedPizzas>{
         }catch (SQLException e){
             throw new RuntimeException("Error! Trouble trying to retrieve Orders!");
         }
-
-
-
-
         return orderedPizzas;
     }
+
+    public List<OrderedPizzas> getCartByUser(){
+        List <OrderedPizzas> orderedPizzas = new ArrayList<>();
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ordered_pizzas WHERE ");
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                orderedPizzas.add(new OrderedPizzas(rs.getString("order_id"),
+                        rs.getString("pizza_id"),rs.getInt("order_quantity")));
+            }
+
+        }catch (SQLException e){
+            throw new RuntimeException("Error! Trouble trying to retrieve Orders!");
+        }
+        return orderedPizzas;
+    }
+
 }

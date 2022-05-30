@@ -147,8 +147,26 @@ public class AdminMenu implements IMenu{
                 System.out.println("["+(i+1)+"]"+ "\nPizza: "+ pizzeriaInventories.get(i).getPizza_id()+"\nAmount In Stock: "+pizzeriaInventories.get(i).getQuantity());
             }
 
-            System.out.println("\nSelect Pizza to edit Inventory");
-            System.out.println("\n[x] To go back to go back to Pizzeria Menu");
+            if (pizzeriaInventories.size()!=0){
+                System.out.println("\nSelect Pizza to edit Inventory");
+                System.out.println("\n[0] To go back to go back to Pizzeria Menu");
+            }else {
+                System.out.println("\nNo pizzas added yet");
+                System.out.println("\nWould you like to add Pizzas? (y/n");
+                System.out.print("\nEnter: ");
+                String input = scan.nextLine();
+                switch(input){
+                    case "y":
+                        addPizzaInventory(selectedPizzeria);
+                        break ;
+                    case "n":
+                        pizzeriaMenu(selectedPizzeria);
+                        break ;
+                    default:
+                        System.out.println("Invalid Input.");
+                        break;
+                }
+            }
 
             System.out.print("\nEnter: ");
             int input = scan.nextInt()-1;
@@ -173,9 +191,9 @@ public class AdminMenu implements IMenu{
             List <PizzaOrders> pizzaOrders = pizzaOrderService.getOrderbyPizzeria(selectedPizzeria.getId());
             for (int i = 0; i < pizzaOrders.size(); i++){
                 String usersOrderId = pizzaOrders.get(i).getUser_id();
-                System.out.println("["+(i+1)+"]"+ "\nCustomer Username: "+ usersOrderId+
+                System.out.println("["+(i+1)+"]"+ "\nCustomer ID: "+ usersOrderId+
                         "\nOrder Date: "+ pizzaOrders.get(i).getOrder_date()+
-                        "\nTotal: $"+pizzaOrders.get(i).getOrder_price() );
+                        "\nTotal: $"+pizzaOrders.get(i).getOrder_price()  );
             }
 
 
@@ -188,6 +206,47 @@ public class AdminMenu implements IMenu{
                     break;
             }
 
+
+        }
+
+        private void addPizzaInventory(Pizzeria selectedPizzeria){
+            Scanner scan = new Scanner(System.in);
+            String pizzeria_id = selectedPizzeria.getId();
+            String pizza_id;
+            int quantity;
+            while(true){
+                System.out.println("\nEnter Pizza id: ");
+                System.out.println("\n[CP] [PP] [HP] [MLP] [VLP] [SP]");
+                pizza_id = scan.nextLine();
+
+                System.out.println("\nEnter quantity to add to stock: ");
+                quantity= scan.nextInt();
+
+                confirmExit:{
+                    while(true){
+                        System.out.println("Confirm Inventory details (y/n)");
+                        System.out.println("\nPizza ID: " + pizza_id);
+                        System.out.println("In Stock: " + quantity);
+                        System.out.print("\nEnter: ");
+                        String input = scan.nextLine();
+
+                        switch(input){
+                            case "y":
+                                PizzeriaInventory pizzeriaInventory= new PizzeriaInventory(pizzeria_id,pizza_id,quantity);
+                                pizzeriaInventoryService.saveInvent(pizzeriaInventory);
+                                System.out.println("New Product successfully registered.");
+                                pizzeriaMenu(selectedPizzeria);
+                                break;
+                            case "n":
+                                break confirmExit;
+                            default:
+                                System.out.println("Invalid Input.");
+                                break;
+                        }
+
+                    }
+                }
+            }
 
         }
 

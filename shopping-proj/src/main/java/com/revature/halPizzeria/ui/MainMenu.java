@@ -119,7 +119,7 @@ public class MainMenu implements IMenu {
         //*************     FIX THIS TO SO IT SAVES TO DATABASE      **************//
     private void makeCart(Pizza selectedPizza, Pizzeria selectedPizzeria, int input){
         Scanner scan = new Scanner(System.in);
-        OrderedPizzas orderedPizzas = new OrderedPizzas();
+
 
         exit:{
             while (true){
@@ -130,17 +130,18 @@ public class MainMenu implements IMenu {
 
                 int ogInput = pizzeriaInventories.get(input).getQuantity();
                 int newInventQuantity = ogInput - quantity;
-
+                OrderedPizzas orderedPizzas = new OrderedPizzas();
                 orderedPizzas.setOrder_id(UUID.randomUUID().toString());
                 orderedPizzas.setPizza_quantity(quantity);
                 orderedPizzas.setPizza_id(selectedPizza.getId());
-                pizzeriaInventoryService.subInventory(selectedPizza.getId(), selectedPizzeria.getId(), newInventQuantity);
+                //pizzeriaInventoryService.subInventory(selectedPizza.getId(), selectedPizzeria.getId(), newInventQuantity);
                 orderedPizzasService.saveOrder(orderedPizzas);
                 System.out.println("\n[1] View Cart and Checkout");
                 System.out.println("\n[2] Add more Pizzas!");
                 System.out.print("\nEnter: ");
                 switch (scan.nextLine()){
                     case "1":
+                        viewCart(orderedPizzas);
 
                         checkout(selectedPizzeria, orderedPizzas, selectedPizza);
                         break exit;
@@ -157,22 +158,27 @@ public class MainMenu implements IMenu {
     }
     //*************     FIX THIS TO SO IT SAVES TO DATABASE      **************//
 
+    private void viewCart(OrderedPizzas orderedPizzas){
+        System.out.println(orderedPizzas.getPizza_quantity());
+        System.out.println(orderedPizzas.getPizza_id());
+    }
+
     private void checkout(Pizzeria selectedPizzeria, OrderedPizzas orderedPizzas, Pizza selectedPizza){
-        Scanner scan = new Scanner(System.in);
-        PizzaOrders pizzaOrders = new PizzaOrders();
-        pizzaOrders.setId(UUID.randomUUID().toString());
-        pizzaOrders.setPizzeria_id(selectedPizzeria.getId());
-        pizzaOrders.setUser_id(user.getId());
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date date = new Date();
-        System.out.println(formatter.format(date));
-        pizzaOrders.setOrder_date(String.valueOf(date));
-        pizzaOrders.setOrder_price(12);
-
-        System.out.println(pizzaOrders);
-
-        // do math to get order total price (get pizza_id prize)*(get quantity by pizza id) + yeah
-        //
+//        Scanner scan = new Scanner(System.in);
+//        PizzaOrders pizzaOrders = new PizzaOrders();
+//        pizzaOrders.setId(UUID.randomUUID().toString());
+//        pizzaOrders.setPizzeria_id(selectedPizzeria.getId());
+//        pizzaOrders.setUser_id(user.getId());
+//        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+//        Date date = new Date();
+//        System.out.println(formatter.format(date));
+//        pizzaOrders.setOrder_date(String.valueOf(date));
+//        pizzaOrders.setOrder_price(12);
+//
+//        System.out.println(pizzaOrders);
+//
+//        // do math to get order total price (get pizza_id prize)*(get quantity by pizza id) + yeah
+//        //
 
     }
 
