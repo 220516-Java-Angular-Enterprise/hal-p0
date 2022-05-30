@@ -116,7 +116,7 @@ public class MainMenu implements IMenu {
         }
 
     }
-
+        //*************     FIX THIS TO SO IT SAVES TO DATABASE      **************//
     private void makeCart(Pizza selectedPizza, Pizzeria selectedPizzeria, int input){
         Scanner scan = new Scanner(System.in);
         OrderedPizzas orderedPizzas = new OrderedPizzas();
@@ -155,6 +155,7 @@ public class MainMenu implements IMenu {
             }
         }
     }
+    //*************     FIX THIS TO SO IT SAVES TO DATABASE      **************//
 
     private void checkout(Pizzeria selectedPizzeria, OrderedPizzas orderedPizzas, Pizza selectedPizza){
         Scanner scan = new Scanner(System.in);

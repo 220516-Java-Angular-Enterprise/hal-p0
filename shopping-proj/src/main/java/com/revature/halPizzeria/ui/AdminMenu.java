@@ -7,6 +7,7 @@ import com.revature.halPizzeria.models.User;
 import com.revature.halPizzeria.services.PizzaOrderService;
 import com.revature.halPizzeria.services.PizzeriaInventoryService;
 import com.revature.halPizzeria.services.PizzeriaService;
+import com.revature.halPizzeria.services.UserService;
 import com.revature.halPizzeria.util.annotations.Inject;
 
 import java.util.List;
@@ -19,13 +20,15 @@ public class AdminMenu implements IMenu{
     private final PizzeriaService pizzeriaService;
     private final PizzeriaInventoryService pizzeriaInventoryService;
     private final PizzaOrderService pizzaOrderService;
+    private final UserService userService;
 
     @Inject
-    public AdminMenu(User user, PizzeriaService pizzeriaService, PizzeriaInventoryService pizzeriaInventoryService, PizzaOrderService pizzaOrderService) {
+    public AdminMenu(User user, PizzeriaService pizzeriaService, PizzeriaInventoryService pizzeriaInventoryService, PizzaOrderService pizzaOrderService, UserService userService) {
         this.user = user;
         this.pizzeriaService = pizzeriaService;
         this.pizzeriaInventoryService = pizzeriaInventoryService;
         this.pizzaOrderService = pizzaOrderService;
+        this.userService = userService;
     }
 
     @Override
@@ -166,12 +169,15 @@ public class AdminMenu implements IMenu{
             Scanner scan = new Scanner(System.in);
             System.out.println("Inventory for the" + selectedPizzeria.getCity()+ " Pizzeria");
 
+
             List <PizzaOrders> pizzaOrders = pizzaOrderService.getOrderbyPizzeria(selectedPizzeria.getId());
             for (int i = 0; i < pizzaOrders.size(); i++){
-                System.out.println("["+(i+1)+"]"+ "\nCustomer ID"+ pizzaOrders.get(i).getUser_id()+
+                String usersOrderId = pizzaOrders.get(i).getUser_id();
+                System.out.println("["+(i+1)+"]"+ "\nCustomer Username: "+ usersOrderId+
                         "\nOrder Date: "+ pizzaOrders.get(i).getOrder_date()+
                         "\nTotal: $"+pizzaOrders.get(i).getOrder_price() );
             }
+
 
             System.out.println("\n[x] Exit to Pizzeria Menu");
             switch (scan.nextLine()){

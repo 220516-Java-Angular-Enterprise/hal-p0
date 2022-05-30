@@ -71,7 +71,7 @@ public class StartMenu implements IMenu {
                 if (user.getRole().equals("ADMIN")){
                     new AdminMenu(user, new PizzeriaService(new PizzeriaDAO()),
                             new PizzeriaInventoryService(new PizzeriaInventoryDAO()),
-                            new PizzaOrderService(new PizzaOrderDAO())).start();
+                            new PizzaOrderService(new PizzaOrderDAO()), new UserService(new UserDAO())).start();
                 }else {
                     new MainMenu(user, new UserService(new UserDAO()),
                             new PizzeriaService(new PizzeriaDAO()),
