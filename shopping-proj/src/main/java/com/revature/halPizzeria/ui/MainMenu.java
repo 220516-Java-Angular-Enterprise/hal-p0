@@ -43,7 +43,7 @@ public class MainMenu implements IMenu {
         exit:{
             while (true) {
                 System.out.println("\nWelcome, "+ user.getUsername());
-                System.out.println("\n[1]  Select Your Pizzeria");
+                System.out.println("\n[1] Select Your Pizzeria");
                 System.out.println("\n[2] View Order History");
                 System.out.println("\n[3] Edit Customer Profile"); /// MAYBE OR JUST EXIT
                 System.out.print("\nEnter:");
@@ -67,7 +67,21 @@ public class MainMenu implements IMenu {
         }
     }
     /////* Customer Info *//////
-    private void viewOrderHistory(){}
+    private void viewOrderHistory(){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\n"+ user.getUsername()+" Order History");
+        List<PizzaOrders> history = pizzaOrderService.getOrderByUser(user.getId());
+        List <Pizzeria> pizzerias = pizzeriaService.getAllPizzerias();
+
+        //System.out.println(history);
+        for (int i = 0; i < history.size(); i++){
+            System.out.println("["+(i+1)+"]"+
+                    "\nOrder Date: "+ history.get(i).getOrder_date()+
+                    "\nTotal: $"+history.get(i).getOrder_price()  + "\nPizzeria Info: " + pizzerias.get(i).getCity());
+        }
+
+    }
+
     private void editUserInfo(){}
 
     /* ORDERING PIZZAS */
@@ -119,21 +133,21 @@ public class MainMenu implements IMenu {
         //*************     FIX THIS TO SO IT SAVES TO DATABASE      **************//
     private void makeCart(Pizza selectedPizza, Pizzeria selectedPizzeria, int input){
         Scanner scan = new Scanner(System.in);
+        String randomOrderID = UUID.randomUUID().toString();
+        String pizzaID = selectedPizza.getId();
+        int quantity;
 
 
         exit:{
             while (true){
                 System.out.println("\nQuantity of "+ selectedPizza.getPizza_name()+"'s: ");
-                int quantity = scan.nextInt();
+                quantity = scan.nextInt();
                 scan.nextLine();
                 List <PizzeriaInventory> pizzeriaInventories = pizzeriaInventoryService.getInventoryByPizzeria(selectedPizzeria.getId());
 
                 int ogInput = pizzeriaInventories.get(input).getQuantity();
                 int newInventQuantity = ogInput - quantity;
-                OrderedPizzas orderedPizzas = new OrderedPizzas();
-                orderedPizzas.setOrder_id(UUID.randomUUID().toString());
-                orderedPizzas.setPizza_quantity(quantity);
-                orderedPizzas.setPizza_id(selectedPizza.getId());
+                OrderedPizzas orderedPizzas = new OrderedPizzas(randomOrderID,pizzaID,quantity);
                 //pizzeriaInventoryService.subInventory(selectedPizza.getId(), selectedPizzeria.getId(), newInventQuantity);
                 orderedPizzasService.saveOrder(orderedPizzas);
                 System.out.println("\n[1] View Cart and Checkout");
@@ -181,6 +195,7 @@ public class MainMenu implements IMenu {
 //        //
 
     }
+
 
 
 

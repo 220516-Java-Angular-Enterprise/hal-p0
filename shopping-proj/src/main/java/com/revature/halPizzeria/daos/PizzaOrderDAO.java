@@ -58,11 +58,11 @@ public class PizzaOrderDAO implements CrudDAO<PizzaOrders>{
         return  null;
     }
 
-    public List<PizzaOrders> getPizzaOrdersByUser(PizzaOrders obj){
+    public List<PizzaOrders> getPizzaOrdersByUser(String user_id){
         List<PizzaOrders> pizzaOrders = new ArrayList<>();
         try {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM pizza_orders WHERE user_id = (?)");
-            ps.setString(1,obj.getUser_id());
+            ps.setString(1,user_id);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
@@ -72,7 +72,7 @@ public class PizzaOrderDAO implements CrudDAO<PizzaOrders>{
             }
 
         }catch (SQLException e){
-            throw new RuntimeException("Error! Trouble trying to retrieve Pizzerias!");}
+            throw new RuntimeException("Error! Trouble trying to retrieve Order!");}
 
 
         return pizzaOrders;
@@ -91,7 +91,7 @@ public class PizzaOrderDAO implements CrudDAO<PizzaOrders>{
             }
 
         }catch (SQLException e){
-            throw new RuntimeException("Error! Trouble trying to retrieve Pizzerias!");}
+            throw new RuntimeException("Error! Trouble trying to retrieve Orders!");}
 
 
         return pizzaOrders;
