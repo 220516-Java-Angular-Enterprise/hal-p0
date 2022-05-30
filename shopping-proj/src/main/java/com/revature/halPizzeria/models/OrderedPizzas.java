@@ -11,6 +11,10 @@ public class OrderedPizzas {
         this.pizza_quantity = pizza_quantity;
     }
 
+    public OrderedPizzas() {
+
+    }
+
     public String getOrder_id() {
         return order_id;
     }

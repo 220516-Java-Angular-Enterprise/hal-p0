@@ -21,8 +21,9 @@ public class PizzaService {
         pizzaDAO.save(pizza);
     }
 
-    public List<Pizza> getPizzasByPizzeria(String id){
-        return pizzaDAO.getPizzasByPizzeriaId(id);
+    public List<Pizza> getPizzasByPizzeria(String pizzeria_id){
+
+        return pizzaDAO.getPizzasByPizzeriaId(pizzeria_id);
     }
 
     public boolean deletePizza(String id){

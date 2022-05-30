@@ -58,13 +58,10 @@ public class PizzaDAO implements CrudDAO<Pizza> {
     @Override
     public List<Pizza> getAll() {
         List<Pizza> pizzas = new ArrayList<>();
-
         try {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM pizzas");
             ResultSet rs = ps.executeQuery();
-
             while (rs.next()){
-
 
             }
         }catch (SQLException e){
@@ -79,14 +76,12 @@ public class PizzaDAO implements CrudDAO<Pizza> {
     public List<Pizza> getPizzasByPizzeriaId(String pizzeria_id ){
         List<Pizza> pizzas = new ArrayList<>();
         try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM pizzas WHERE pizzeria_id = (?)");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM pizzas p INNER JOIN inventory i ON p.id = i.pizza_id WHERE i.pizzeria_id =(?)");
             ps.setString(1,pizzeria_id);
             ResultSet rs = ps.executeQuery();
-
             while (rs.next()){
                 pizzas.add(new Pizza(rs.getString("id"), rs.getString("pizza_name"),
                         rs.getInt("price"), rs.getString("pizza_desc")));
-
             }
         }catch (SQLException e){
             throw new RuntimeException("Error! Trouble trying to retrieve Pizzas!");

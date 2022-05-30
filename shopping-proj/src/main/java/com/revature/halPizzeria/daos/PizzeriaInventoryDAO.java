@@ -1,5 +1,7 @@
 package com.revature.halPizzeria.daos;
 
+import com.revature.halPizzeria.models.OrderedPizzas;
+import com.revature.halPizzeria.models.Pizza;
 import com.revature.halPizzeria.models.PizzeriaInventory;
 import com.revature.halPizzeria.models.User;
 import com.revature.halPizzeria.util.custom_exceptions.InvalidUserException;
@@ -87,6 +89,20 @@ public class PizzeriaInventoryDAO implements CrudDAO<PizzeriaInventory> {
             throw new InvalidUserException("Error! Trouble trying to add to stock");
         }
     }
+
+    public void subQuantity(String pizza_id, String pizzeria_id, int quantity){
+        try{
+            PreparedStatement ps = con.prepareStatement("UPDATE inventory SET quantity = (?) WHERE pizza_id = (?) AND pizzeria_id = (?)");
+            ps.setInt(1,quantity);
+            ps.setString(2,pizza_id);
+            ps.setString(3,pizzeria_id);
+            ps.executeUpdate();
+        }catch (SQLException e){
+            throw new InvalidUserException("Error! Trouble trying to add to stock");
+        }
+    }
+
+
 
 
 }

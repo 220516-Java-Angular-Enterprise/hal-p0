@@ -15,6 +15,10 @@ public class PizzaOrders {
         this.order_price = order_price;
     }
 
+    public PizzaOrders() {
+
+    }
+
     public String getId() {
         return id;
     }

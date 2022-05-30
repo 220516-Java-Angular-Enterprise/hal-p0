@@ -1,14 +1,8 @@
 package com.revature.halPizzeria.ui;
 
-import com.revature.halPizzeria.daos.PizzaOrderDAO;
-import com.revature.halPizzeria.daos.PizzeriaDAO;
-import com.revature.halPizzeria.daos.PizzeriaInventoryDAO;
-import com.revature.halPizzeria.daos.UserDAO;
+import com.revature.halPizzeria.daos.*;
 import com.revature.halPizzeria.models.User;
-import com.revature.halPizzeria.services.PizzaOrderService;
-import com.revature.halPizzeria.services.PizzeriaInventoryService;
-import com.revature.halPizzeria.services.PizzeriaService;
-import com.revature.halPizzeria.services.UserService;
+import com.revature.halPizzeria.services.*;
 import com.revature.halPizzeria.util.annotations.Inject;
 import com.revature.halPizzeria.util.custom_exceptions.InvalidUserException;
 
@@ -79,8 +73,12 @@ public class StartMenu implements IMenu {
                             new PizzeriaInventoryService(new PizzeriaInventoryDAO()),
                             new PizzaOrderService(new PizzaOrderDAO())).start();
                 }else {
-                    new MainMenu(user, new UserService(new UserDAO())).start();
-                break;}
+                    new MainMenu(user, new UserService(new UserDAO()),
+                            new PizzeriaService(new PizzeriaDAO()),
+                            new OrderedPizzasService(new OrderedPizzasDAO()),
+                            new PizzaOrderService(new PizzaOrderDAO()),
+                            new PizzaService(new PizzaDAO()), new PizzeriaInventoryService(new PizzeriaInventoryDAO())).start();
+                    break;}
             } catch (InvalidUserException e){
                 System.out.println(e.getMessage());
             }
@@ -106,8 +104,9 @@ public class StartMenu implements IMenu {
 
                 try{
                     if (userService.isValidUsername(username)) {
-                        System.out.println("Username Accepted!");
-                        // add if dupe///
+                        if(userService.isNotDuplicateUsername(username)){
+                            System.out.println("Username Accepted!");
+                        }
                         break;
                     }
                 } catch (InvalidUserException e) {
@@ -148,24 +147,25 @@ public class StartMenu implements IMenu {
                                     User user =new User(UUID.randomUUID().toString(),username,password, "DEFAULT");
                                     userService.register(user);
 
-                                    new MainMenu(user, new UserService(new UserDAO())).start(); ///add in other stuff
+                                    new MainMenu(user, new UserService(new UserDAO()),
+                                            new PizzeriaService(new PizzeriaDAO()),
+                                            new OrderedPizzasService(new OrderedPizzasDAO()),
+                                            new PizzaOrderService(new PizzaOrderDAO()),
+                                            new PizzaService(new PizzaDAO()), new PizzeriaInventoryService(new PizzeriaInventoryDAO())).start();
                                     break completeExit;
                                 case "n":
-                                    break confirmExit;
+                                    break completeExit;
                                 default:
                                     System.out.println("Invalid input!");
-                                    break;
+                                    break confirmExit;
                             }
                         }
                     }
                 }
+            }
 
         }
-
-        }
-
-
-
 
     }
+
 }
