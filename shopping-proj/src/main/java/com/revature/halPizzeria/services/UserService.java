@@ -5,7 +5,7 @@ import com.revature.halPizzeria.models.User;
 import com.revature.halPizzeria.util.annotations.Inject;
 import com.revature.halPizzeria.util.custom_exceptions.InvalidUserException;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 /* Purpose: validation ie. checks username, password, and retrieve data from our daos. */
@@ -49,7 +49,11 @@ public class UserService {
         userDAO.save(user);
     }
 
-    public User getUserById(String id) {
+    public List<String> getAllUsers(){
+        return userDAO.getAllUsernames();
+    }
+
+    public User getUserById(String id) throws SQLException {
         return userDAO.getById(id);
     }
 

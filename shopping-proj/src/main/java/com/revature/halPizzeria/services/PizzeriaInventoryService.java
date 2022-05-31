@@ -4,6 +4,7 @@ import com.revature.halPizzeria.daos.PizzeriaInventoryDAO;
 import com.revature.halPizzeria.models.OrderedPizzas;
 import com.revature.halPizzeria.models.PizzeriaInventory;
 import com.revature.halPizzeria.util.annotations.Inject;
+import com.revature.halPizzeria.util.custom_exceptions.InvalidInventoryException;
 import com.revature.halPizzeria.util.custom_exceptions.InvalidSQLException;
 
 import java.util.List;
@@ -52,6 +53,11 @@ public class PizzeriaInventoryService {
             System.out.println(e.getMessage());
         }
         return false;
+    }
+    public boolean inventoryIsGreaterThanZero(int quantity){
+        String quant = String.valueOf(quantity);
+        if (quant.matches("^[1-9][0-9]*$")) return true;
+        throw new InvalidInventoryException("Quantity must be greater than 0!");
     }
 
 }
