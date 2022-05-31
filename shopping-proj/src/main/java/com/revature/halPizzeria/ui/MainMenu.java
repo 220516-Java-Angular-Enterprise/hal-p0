@@ -5,10 +5,8 @@ import com.revature.halPizzeria.services.*;
 import com.revature.halPizzeria.util.annotations.Inject;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MainMenu implements IMenu {
 @Inject
@@ -45,7 +43,7 @@ public class MainMenu implements IMenu {
                 System.out.println("\nWelcome, "+ user.getUsername());
                 System.out.println("\n[1] Select Your Pizzeria");
                 System.out.println("\n[2] View Order History");
-                System.out.println("\n[3] Edit Customer Profile"); /// MAYBE OR JUST EXIT
+                System.out.println("\n[3] Sign Out");
                 System.out.print("\nEnter:");
 
                 switch (scan.nextLine()) {
@@ -56,31 +54,57 @@ public class MainMenu implements IMenu {
                         viewOrderHistory();
                         break;
                     case "3":
-                        editUserInfo();
-                        break;
+                        break exit;
                     default:
                         System.out.println("\nInvalid selection");
-                        break exit;
+                        break ;
                 }
 
             }
         }
     }
     /////* Customer Info *//////
-    private void viewOrderHistory(){
+    private void viewOrderHistory() {
         Scanner scan = new Scanner(System.in);
-        System.out.println("\n"+ user.getUsername()+" Order History");
+        System.out.println("\n" + user.getUsername() + " Order History");
         List<PizzaOrders> history = pizzaOrderService.getOrderByUser(user.getId());
-        List <Pizzeria> pizzerias = pizzeriaService.getAllPizzerias();
+        List<Pizzeria> pizzerias = pizzeriaService.getAllPizzerias();
 
-        //System.out.println(history);
-        for (int i = 0; i < history.size(); i++){
-            System.out.println("["+(i+1)+"]"+
-                    "\nOrder Date: "+ history.get(i).getOrder_date()+
-                    "\nTotal: $"+history.get(i).getOrder_price()  + "\nPizzeria Info: " + pizzerias.get(i).getCity());
+
+        List<PizzaOrders> lowToHigh = history.stream().sorted(Comparator.comparingInt(PizzaOrders::getOrder_price)).collect(Collectors.toList());
+        List<PizzaOrders> highToLow = history.stream().sorted(Comparator.comparingInt(PizzaOrders::getOrder_price)).collect(Collectors.toList());
+
+        lowToHigh.forEach(System.out::println);
+        exit:
+        {
+            while (true) {
+                System.out.println("\n[1] Sort Price Low to High");
+                System.out.println("\n[2] Sort Price High to Low");
+                System.out.println("\nEnter: ");
+                switch (scan.nextLine()) {
+                    case "1":
+                        lowToHigh.forEach(System.out::println);
+                        break;
+                    case "2":
+                        highToLow.forEach(System.out::println);
+                        break;
+                    default:
+                        System.out.println("\nInvalid selection!");
+                        break exit;
+                }
+            }
         }
-
     }
+
+//        for (int i = 0; i < history.size(); i++){
+//            System.out.println("["+(i+1)+"]"+
+//                    "\nOrder Date: "+ history.get(i).getOrder_date()+
+//                    "\nTotal: $"+history.get(i).getOrder_price()  + "\nPizzeria Info: " + pizzerias.get(i).getCity());
+//        }
+
+        //Sort By Cost (High to Low) & (Low to High)
+
+
 
     private void editUserInfo(){}
 
@@ -156,7 +180,6 @@ public class MainMenu implements IMenu {
                 switch (scan.nextLine()){
                     case "1":
                         viewCart(orderedPizzas, selectedPizza, selectedPizzeria);
-                        //checkout(selectedPizzeria, orderedPizzas, selectedPizza);
                         break exit;
                     case "2":
                         viewPizzas(selectedPizzeria, randomOrderID);
@@ -219,7 +242,7 @@ public class MainMenu implements IMenu {
         System.out.println("\nOrdered Pizzas: "+ selectedPizza.getPizza_name() +" | Quantity: "+ orderedPizzas.getPizza_quantity());
         System.out.println("\nOrder Total: $" +pizzaOrders.getOrder_price());
 
-        System.out.println("\nMain menu? (y/n)");
+        System.out.println("\nConfirm (y/n)");
         System.out.println("\nEnter");
         switch (scan.nextLine()){
             case "y":

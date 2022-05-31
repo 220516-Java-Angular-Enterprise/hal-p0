@@ -150,6 +150,7 @@ public class AdminMenu implements IMenu{
             if (pizzeriaInventories.size()!=0){
                 System.out.println("\n[#]Select Pizza to edit Inventory");
                 System.out.println("\n[0] To go back to go back to Pizzeria Menu");
+                System.out.println("\n[8] To add more pizzas");
             }else {
                 System.out.println("\nNo pizzas added yet");
                 System.out.println("\nWould you like to add Pizzas? (y/n");
@@ -180,6 +181,8 @@ public class AdminMenu implements IMenu{
                 if (pizzeriaInventoryService.addInventory(quantity,selectedPizza.getPizza_id(),selectedPizza.getPizzeria_id())) {
                     System.out.println("\nInventory was updated!");
                 }
+            } else if (input==7) {
+                addPizzaInventory(selectedPizzeria);
             } else pizzeriaMenu(selectedPizzeria);
         }
 
