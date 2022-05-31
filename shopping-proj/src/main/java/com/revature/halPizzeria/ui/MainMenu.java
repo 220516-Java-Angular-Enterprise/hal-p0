@@ -203,6 +203,7 @@ public class MainMenu implements IMenu {
         System.out.println("\n"+user.getUsername() + " Cart:");
         List<OrderedPizzas> orderPizza = orderedPizzasService.getByOrderId(orderedPizzas.getOrder_id());
 
+
         for (int i = 0; i < orderPizza.size(); i++){
             System.out.println("["+(i+1)+"]"+ "\nPizza: "+ selectedPizza.getPizza_name()+
                     "\nQuantity: "+orderPizza.get(i).getPizza_quantity());
