@@ -4,6 +4,8 @@ import com.revature.halPizzeria.daos.PizzaDAO;
 import com.revature.halPizzeria.models.Pizza;
 import com.revature.halPizzeria.models.Pizzeria;
 import com.revature.halPizzeria.util.annotations.Inject;
+import com.revature.halPizzeria.util.custom_exceptions.InvalidInventoryException;
+import com.revature.halPizzeria.util.custom_exceptions.InvalidPizzaException;
 import com.revature.halPizzeria.util.custom_exceptions.InvalidSQLException;
 import com.revature.halPizzeria.util.custom_exceptions.InvalidUserException;
 
@@ -36,6 +38,19 @@ public class PizzaService {
         }
         return false;
     }
+
+    public boolean pizzaIDIsTwoOrMore(String id){
+        if (id.matches("^[a-z]{3}$") || id.matches("^[a-z]{2}$")) return true;
+        throw new InvalidPizzaException("ID must be 2 or 3 characters");
+    }
+
+    public boolean pizzaPriceIsValidInt(int price){
+        String strPrice = String.valueOf(price);
+        if (strPrice.matches("^[1-9][0-9]*$"))return true;
+        throw new InvalidPizzaException("Price must be greater than 0");
+    }
+
+
 
 
 

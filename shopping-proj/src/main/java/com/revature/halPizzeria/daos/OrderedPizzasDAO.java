@@ -21,8 +21,8 @@ public class OrderedPizzasDAO implements CrudDAO<OrderedPizzas>{
 
         }catch (SQLException e){
 
-            System.out.println(e.getMessage());
-//            throw new RuntimeException("Error! Trouble saving to database!");
+            //System.out.println(e.getMessage());
+        throw new RuntimeException("Error! Trouble saving to database!");
         }
 
     }
